@@ -1,5 +1,17 @@
-const { decryptPassword, generateToken } = require("../scripts/utils/helper");
-const { getAllUsers, getSingleUser, create } = require("../services/user");
+const {
+  decryptPassword,
+  generateToken,
+  generatePassword,
+} = require("../scripts/utils/helper");
+const {
+  getAllUsers,
+  getSingleUser,
+  create,
+  edit,
+  addPhone,
+  resetPw,
+} = require("../services/user");
+const { emailer } = require("../scripts/utils/emailer");
 
 const login = async (req, res) => {
   const { body } = req;
@@ -48,7 +60,13 @@ const getSingle = async (req, res) => {
 };
 
 const insert = async (req, res) => {
-  const { body } = req;
+  //! Eğer checkAdminAuthtan gelmiyorsa req.user'ı yoktur
+  //! böylelikle signupdan isAdmin true gelmesini önlememiz gerekli
+  //* Joi de bool değere default atamayı araştırdım fakat bulamadım.
+  let { body } = req;
+  if (!req.user || !req.user.isAdmin) {
+    body.isAdmin = false;
+  }
   try {
     const newUser = await create(body);
     res.status(201).send(newUser);
@@ -58,4 +76,39 @@ const insert = async (req, res) => {
   }
 };
 
-module.exports = { login, getAll, getSingle, insert };
+const update = async (req, res) => {
+  const { params, body } = req;
+  console.log(`params`, params, body);
+  try {
+    const updatedUser = await edit(params.id, body);
+    res.status(200).send(updatedUser);
+  } catch (err) {
+    console.log(`err`, err);
+    res.status(500).send(err);
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { body } = req;
+  const newPassword = generatePassword();
+  try {
+    const newPass = await resetPw(body.email, newPassword);
+    if (!newPass) {
+      return res.status(400).send("Böyle bir e-maile kayıtlı kullanıcı yok");
+    }
+    console.log(`newPass`, newPass);
+    try {
+      await emailer(body.email, newPassword);
+    } catch (err) {
+      console.log(`err`, err);
+      return res.status(500).send(err);
+    }
+
+    res.status(200).send(newPass);
+  } catch (err) {
+    console.log(`err`, err);
+    res.status(500).send(err);
+  }
+};
+
+module.exports = { login, getAll, getSingle, insert, update, resetPassword };

@@ -1,5 +1,6 @@
 var CryptoJS = require("crypto-js");
 const mongoose = require("mongoose"); // Erase if already required
+const { cryptPassword } = require("../scripts/utils/helper");
 
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema(
@@ -29,13 +30,13 @@ var userSchema = new mongoose.Schema(
     ],
     phones: [{ number: { type: String }, type: { type: String } }],
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-    isAdmin: { type: Boolean },
+    isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
 userSchema.pre("save", function () {
-  this.password = CryptoJS.AES.encrypt(this.password, "myHashKey").toString();
+  this.password = cryptPassword(this.password);
 });
 
 //Export the model

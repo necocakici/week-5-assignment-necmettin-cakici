@@ -11,7 +11,6 @@ const checkAdminAuthToken = (req, res, next) => {
         if (err) {
           return res.status(403).send("JWT hatalı");
         } else {
-          console.log("check14", `user`, user);
           if (user && user.user.isAdmin) {
             req.user = user.user;
             next();
