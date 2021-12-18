@@ -10,6 +10,8 @@ const {
   edit,
   addPhone,
   resetPw,
+  removePhone,
+  editPhones,
 } = require("../services/user");
 const { emailer } = require("../scripts/utils/emailer");
 
@@ -44,7 +46,7 @@ const getAll = async (req, res) => {
   }
 };
 
-const getSingle = async (req, res) => {
+const getOne = async (req, res) => {
   const { params } = req;
   try {
     const user = await getSingleUser({ _id: params.id });
@@ -111,4 +113,49 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { login, getAll, getSingle, insert, update, resetPassword };
+const addNewPhone = async (req, res) => {
+  const { params, body } = req;
+  console.log(`params`, params, body);
+  try {
+    const updatedPhones = await addPhone(params.id, body);
+    res.status(200).send(updatedPhones);
+  } catch (err) {
+    console.log(`err`, err);
+    res.status(500).send(err);
+  }
+};
+
+const deletePhone = async (req, res) => {
+  const { params, body } = req;
+  console.log(`params`, params, body);
+  try {
+    const updatedPhones = await removePhone(params.id, params.phoneId);
+    res.status(200).send(updatedPhones);
+  } catch (err) {
+    console.log(`err`, err);
+    res.status(500).send(err);
+  }
+};
+
+const updatePhone = async (req, res) => {
+  const { params, body } = req;
+  try {
+    const editedPhone = await editPhones(params.id, params.phoneId, body);
+    res.status(200).send(editedPhone);
+  } catch (err) {
+    console.log(`err`, err);
+    res.status(500).send(err);
+  }
+};
+
+module.exports = {
+  login,
+  getAll,
+  getOne,
+  insert,
+  update,
+  resetPassword,
+  addNewPhone,
+  deletePhone,
+  updatePhone,
+};

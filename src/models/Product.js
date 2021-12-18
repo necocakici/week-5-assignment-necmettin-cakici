@@ -32,15 +32,20 @@ var productSchema = new mongoose.Schema(
     media: {
       type: String,
     },
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-      },
-    ],
   },
-  { timestamps: true, versionKey: false }
+  {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+    timestamps: true,
+    versionKey: false,
+  }
 );
+
+productSchema.virtual("comments", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "productId",
+});
 
 //Export the model
 module.exports = mongoose.model("Product", productSchema);

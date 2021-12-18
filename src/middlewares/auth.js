@@ -11,7 +11,6 @@ const authToken = (req, res, next) => {
         if (err) {
           return res.status(403).send("JWT hatalı");
         } else {
-          console.log(`user`, user.user);
           req.user = user.user;
           next();
         }

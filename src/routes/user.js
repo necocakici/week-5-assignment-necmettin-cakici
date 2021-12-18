@@ -3,9 +3,12 @@ const {
   getAll,
   insert,
   login,
-  getSingle,
+  getOne,
   update,
   resetPassword,
+  addNewPhone,
+  deletePhone,
+  updatePhone,
 } = require("../controllers/user");
 const { checkAdminAuthToken } = require("../middlewares/checkAdminAuth");
 const { validate } = require("../middlewares/validate");
@@ -24,7 +27,7 @@ router.get(
   "/:id",
   validate(getUserValidation, "params"),
   checkAdminAuthToken,
-  getSingle
+  getOne
 );
 router.post(
   "/",
@@ -32,7 +35,14 @@ router.post(
   checkAdminAuthToken,
   insert
 );
+//! Gelen userla token user aynı mı kontrolü!
 router.patch("/:id", checkAdminAuthToken, update);
+//? Post
+router.patch("/:id/addPhone", checkAdminAuthToken, addNewPhone);
+//? Delete
+router.patch("/:id/removePhone/:phoneId", checkAdminAuthToken, deletePhone);
+//? Patch
+router.patch("/:id/updatePhone/:phoneId", checkAdminAuthToken, updatePhone);
 router.post(
   "/resetPassword",
   validate(resetPasswordValidation, "body"),
