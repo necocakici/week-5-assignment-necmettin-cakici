@@ -1,4 +1,4 @@
-# -week-5-assignment-necmettin-cakici
+# week-5-assignment-necmettin-cakici
 
 Derste yaptığımız Getir API'ını kendim baştan yaptım.
 
@@ -15,5 +15,6 @@ User yapabildikleri:
 Comment ekleme
 Product görüntüleme
 Adres düzenleme
+Reset Password
 
 Read ME'yi geliştireceğim.
