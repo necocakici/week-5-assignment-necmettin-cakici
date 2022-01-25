@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 const createValidation = Joi.object({
+  startDate: Joi.date().format('YYYY-MM-DD').raw() ,
   firstName: Joi.string().min(2).required(),
   lastName: Joi.string().min(2).required(),
   email: Joi.string().email().required(),

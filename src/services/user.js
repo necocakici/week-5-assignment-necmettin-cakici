@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const { cryptPassword } = require("../scripts/utils/helper");
 
+//! MONGODB ATTRIBUTE MANTIĞI
+
 const getAllUsers = () => {
   return User.find();
 };
@@ -70,7 +72,6 @@ const editPhones = async (_id, phoneId, phoneData) => {
 };
 
 const resetPw = (email, newPassword) => {
-  console.log(`newPassword`, newPassword);
   return User.findOneAndUpdate(
     { email: email },
     {
